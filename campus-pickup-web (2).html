@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Texas Tech Campus Pickup</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --bg-card:#FBFCFA;
+    --bg-card-hover:#F3EFEF;
+    --line:#E6E1E1;
+    --chalk:#111111;
+    --muted:#6E6E6E;
+    --lime:#CC0000;
+    --lime-dark:#8C0000;
+    --red-bright:#FF3B30;
+    --orange:#E85A2A;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body,html{margin:0;padding:0;}
+  #app{
+    font-family:'Inter',sans-serif;
+    background:
+      radial-gradient(circle at 15% 0%, #FBEAEA 0%, transparent 45%),
+      var(--bg);
+    color:var(--chalk);
+    min-height:100vh;
+    padding-bottom:100px;
+  }
+  .display{font-family:'Bebas Neue',sans-serif; letter-spacing:0.02em;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  /* header */
+  .hero{
+    padding:28px 20px 18px;
+    border-bottom:1px solid var(--line);
+    background:
+      repeating-linear-gradient(90deg, transparent, transparent 38px, rgba(204,0,0,0.05) 38px, rgba(204,0,0,0.05) 39px);
+    position:relative;
+  }
+  .hero-top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  .college-name{
+    font-size:34px; line-height:1; color:var(--chalk); cursor:text;
+    border-bottom:2px dashed transparent;
+  }
+  .college-name:hover{border-bottom-color:var(--muted);}
+  .college-name-input{
+    font-family:'Bebas Neue',sans-serif; font-size:34px; background:transparent; color:var(--chalk);
+    border:none; border-bottom:2px solid var(--lime-dark); outline:none; width:100%; letter-spacing:0.02em;
+  }
+  .tagline{color:var(--muted); font-size:13px; margin-top:4px; font-weight:500;}
+  .live-badge{
+    display:flex; align-items:center; gap:6px; font-size:11px; color:var(--lime-dark);
+    text-transform:uppercase; letter-spacing:0.12em; font-weight:700; white-space:nowrap;
+  }
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--lime); box-shadow:0 0 8px var(--lime); animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+
+  /* sport tabs */
+  .tabs{
+    display:flex; gap:8px; overflow-x:auto; padding:14px 20px; border-bottom:1px solid var(--line);
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    flex:0 0 auto; display:flex; align-items:center; gap:7px; padding:8px 14px; border-radius:999px;
+    border:1px solid var(--line); background:var(--bg-card); color:var(--muted); font-size:13px; font-weight:600;
+    cursor:pointer; transition:all .15s ease; white-space:nowrap;
+  }
+  .tab:hover{background:var(--bg-card-hover); color:var(--chalk);}
+  .tab.active{background:#000000; color:#FFFFFF; border-color:#000000 !important;}
+  .tab-icon{font-size:14px; line-height:1;}
+
+  /* feed */
+  .feed{padding:16px 20px; max-width:640px; margin:0 auto;}
+  .section-label{
+    font-size:11px; text-transform:uppercase; letter-spacing:0.14em; color:var(--muted); font-weight:700;
+    margin:22px 0 10px; display:flex; align-items:center; gap:8px;
+  }
+  .section-label::after{content:''; flex:1; height:1px; background:var(--line);}
+
+  .card{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px; margin-bottom:12px; transition:border-color .15s ease;
+  }
+  .card:hover{border-color:#8C0000;}
+  .card-past{opacity:0.72;}
+  .card-past:hover{border-color:var(--line);}
+
+  .past-toggle{
+    display:flex; align-items:center; justify-content:space-between; cursor:pointer;
+    padding:12px 4px; margin:18px 0 10px; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted);
+  }
+  .past-toggle:hover{color:var(--chalk);}
+  .past-toggle-arrow{font-size:10px;}
+
+  .bell-btn{
+    position:relative; background:none; border:none; font-size:19px; cursor:pointer;
+    color:var(--chalk); padding:2px;
+  }
+  .bell-badge{
+    position:absolute; top:-5px; right:-8px; background:var(--lime); color:#FFFFFF;
+    font-size:10px; font-weight:800; border-radius:999px; padding:1px 5px; line-height:1.4; min-width:14px; text-align:center;
+  }
+  .notif-item{
+    display:flex; gap:10px; padding:12px 4px; border-bottom:1px solid var(--line);
+  }
+  .notif-item:last-child{border-bottom:none;}
+  .notif-item .notif-icon{font-size:18px;}
+  .notif-item .notif-text{font-size:13px; line-height:1.5;}
+  .notif-item .notif-text b{font-weight:700;}
+  .notif-item .notif-time{font-size:11px; color:var(--muted); margin-top:2px;}
+  .notif-item.unread{background:rgba(204,0,0,0.05); border-radius:8px;}
+  .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .card-sport{
+    display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.08em; padding:4px 9px; border-radius:6px;
+  }
+  .card-title{font-size:19px; font-weight:800; margin:10px 0 2px; color:var(--chalk);}
+  .card-meta{color:var(--muted); font-size:13px; display:flex; flex-wrap:wrap; gap:x; margin-top:6px; line-height:1.6;}
+  .card-meta span{display:inline-flex; align-items:center; gap:5px; margin-right:14px;}
+  .card-notes{color:#4A5A4C; font-size:14px; margin-top:10px; line-height:1.5;}
+
+  .scoreboard{
+    display:flex; align-items:center; gap:8px; background:#000000; border:1px solid #1A1A1A;
+    border-radius:8px; padding:6px 10px; flex:0 0 auto;
+  }
+  .scoreboard .count{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:15px; color:var(--red-bright);}
+  .scoreboard.full .count{color:var(--orange);}
+  .scoreboard .label{font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em;}
+
+  .card-footer{display:flex; align-items:center; justify-content:space-between; margin-top:14px; gap:10px;}
+  .joiners{display:flex; align-items:center;}
+  .joiner-chip{
+    width:26px;height:26px;border-radius:50%;background:#000000;border:2px solid var(--bg-card);
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#FFFFFF;
+    margin-left:-8px;
+  }
+  .joiner-chip:first-child{margin-left:0;}
+  .host-tag{font-size:12px; color:var(--muted);}
+  .host-tag b{color:var(--chalk); font-weight:700;}
+
+  .btn{
+    border:none; border-radius:999px; padding:9px 18px; font-weight:700; font-size:13px; cursor:pointer;
+    transition:transform .1s ease, opacity .15s ease; font-family:'Inter',sans-serif;
+  }
+  .btn:active{transform:scale(0.96);}
+  .btn-join{background:var(--lime); color:#FFFFFF;}
+  .btn-join:hover{opacity:0.88;}
+  .btn-leave{background:transparent; color:var(--muted); border:1px solid var(--line);}
+  .btn-leave:hover{color:var(--chalk); border-color:var(--muted);}
+  .btn-full{background:var(--line); color:var(--muted); cursor:not-allowed;}
+
+  .empty{
+    text-align:center; padding:50px 20px; color:var(--muted);
+  }
+  .empty .big{font-size:42px; margin-bottom:6px;}
+  .empty p{font-size:14px; max-width:280px; margin:6px auto 0;}
+
+  /* fab */
+  .fab{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:var(--lime); color:#FFFFFF; border:none; border-radius:999px;
+    padding:15px 26px; font-weight:800; font-size:15px; display:flex; align-items:center; gap:8px;
+    box-shadow:0 8px 24px rgba(204,0,0,0.3); cursor:pointer; z-index:20;
+  }
+  .fab:active{transform:translateX(-50%) scale(0.96);}
+
+  .fab-feedback{
+    position:fixed; bottom:24px; right:20px; width:50px; height:50px; border-radius:50%;
+    background:#000000; color:#FFFFFF; border:none; font-size:20px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 20px rgba(0,0,0,0.28); z-index:20;
+  }
+  .fab-feedback:active{transform:scale(0.94);}
+
+  /* modal */
+  .overlay{
+    position:fixed; inset:0; background:rgba(6,10,7,0.72); backdrop-filter:blur(3px);
+    display:flex; align-items:flex-end; justify-content:center; z-index:50; opacity:0; pointer-events:none;
+    transition:opacity .2s ease;
+  }
+  .overlay.open{opacity:1; pointer-events:auto;}
+  .modal{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:20px 20px 0 0;
+    width:100%; max-width:480px; max-height:88vh; overflow-y:auto; padding:22px;
+    transform:translateY(100%); transition:transform .25s ease;
+  }
+  .overlay.open .modal{transform:translateY(0);}
+  .modal-title{font-size:26px; margin-bottom:16px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:6px;}
+  .field input, .field select, .field textarea{
+    width:100%; background:#FFFFFF; border:1px solid var(--line); color:var(--chalk); border-radius:9px;
+    padding:11px 12px; font-size:14px; font-family:'Inter',sans-serif; outline:none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--lime-dark);}
+  .field textarea{resize:vertical; min-height:60px;}
+  .sport-picker{display:grid; grid-template-columns:repeat(4,1fr); gap:8px;}
+  .sport-opt{
+    border:1px solid var(--line); background:#FFFFFF; border-radius:10px; padding:10px 4px;
+    text-align:center; cursor:pointer; font-size:11px; font-weight:700; color:var(--muted);
+  }
+  .sport-opt .emo{font-size:20px; display:block; margin-bottom:4px;}
+  .sport-opt.active{border-color:var(--lime-dark); color:var(--chalk); background:rgba(204,0,0,0.10);}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-cancel{flex:1; background:transparent; border:1px solid var(--line); color:var(--muted); padding:13px;}
+  .btn-submit{flex:2; background:var(--lime); color:#FFFFFF; padding:13px; font-size:15px;}
+  .close-x{position:absolute; top:14px; right:14px; background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer;}
+
+  .toast{
+    position:fixed; top:18px; left:50%; transform:translateX(-50%) translateY(-140%);
+    background:#152219; color:#FFFFFF; padding:11px 20px; border-radius:999px; font-weight:700; font-size:13px;
+    z-index:100; transition:transform .25s ease; box-shadow:0 6px 20px rgba(0,0,0,0.18);
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);}
+
+  ::selection{background:var(--lime); color:#FFFFFF;}
+
+  /* reviews */
+  .star-picker{display:flex; gap:6px; font-size:30px;}
+  .star-picker .star{color:#DDD; cursor:pointer; transition:color .1s ease, transform .1s ease;}
+  .star-picker .star:hover{transform:scale(1.08);}
+  .star-picker .star.filled{color:var(--lime);}
+  .review-card{background:var(--bg-card); border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-bottom:8px;}
+  .review-top{display:flex; justify-content:space-between; align-items:center; gap:8px;}
+  .review-name{font-size:13px; font-weight:700;}
+  .review-stars{font-size:13px; letter-spacing:1px;}
+  .review-comment{font-size:13px; color:#333; margin-top:6px; line-height:1.5;}
+  .rating-summary{display:flex; align-items:center; gap:12px; margin-bottom:18px; padding-bottom:16px; border-bottom:1px solid var(--line);}
+  .rating-summary .avg{font-size:36px; line-height:1;}
+  .rating-summary .meta{font-size:12px; color:var(--muted); margin-top:2px;}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <div id="collegeNameWrap">
+          <span id="collegeName" class="college-name display">Loading…</span>
+        </div>
+        <div class="tagline">Pickup games &amp; workout buddies, posted by students, for students.</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button class="bell-btn" id="bellBtn" title="Notifications">
+          🔔<span class="bell-badge" id="bellBadge" style="display:none;">0</span>
+        </button>
+        <div class="live-badge"><span class="live-dot"></span>Live board</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="feed" id="feed"></div>
+
+  <button class="fab" id="openModalBtn">+ Post a game</button>
+  <button class="fab-feedback" id="openFeedbackBtn" title="Leave feedback">💬</button>
+
+  <div class="overlay" id="feedbackOverlay">
+    <div class="modal">
+      <button class="close-x" id="closeFeedback">✕</button>
+      <div class="modal-title display">Feedback &amp; reviews</div>
+
+      <div class="rating-summary" id="ratingSummary"></div>
+
+      <div class="field">
+        <label>Your rating</label>
+        <div class="star-picker" id="starPicker"></div>
+      </div>
+
+      <div class="field">
+        <label>What should be improved?</label>
+        <textarea id="fbComment" placeholder="Bugs, ideas, missing sports, anything..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Your name (optional)</label>
+        <input id="fbName" type="text" placeholder="Anonymous" maxlength="30"/>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-cancel" id="fbCancelBtn">Cancel</button>
+        <button class="btn btn-submit" id="fbSubmitBtn">Submit review</button>
+      </div>
+
+      <div class="section-label" style="margin-top:26px;">Recent reviews</div>
+      <div id="reviewsList"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="notifOverlay">
+    <div class="modal">
+      <button class="close-x" id="closeNotif">✕</button>
+      <div class="modal-title display">Notifications</div>
+      <div id="notifList"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <button class="close-x" id="closeModal">✕</button>
+      <div class="modal-title display">Post a game</div>
+
+      <div class="field">
+        <label>Sport</label>
+        <div class="sport-picker" id="sportPicker"></div>
+      </div>
+
+      <div class="field">
+        <label>Title</label>
+        <input id="fTitle" type="text" placeholder="e.g. 5v5 run at the rec center" maxlength="60"/>
+      </div>
+
+      <div class="field">
+        <label>Location</label>
+        <input id="fLocation" type="text" placeholder="e.g. Rec Center Court 2" maxlength="60"/>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>Date &amp; time</label>
+          <input id="fDatetime" type="datetime-local"/>
+        </div>
+        <div class="field">
+          <label>Max spots</label>
+          <input id="fMax" type="number" min="2" max="60" value="8"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Notes (optional)</label>
+        <textarea id="fNotes" placeholder="Skill level, what to bring, anything else..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Your name</label>
+        <input id="fHost" type="text" placeholder="So people know who's hosting" maxlength="30"/>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-cancel" id="cancelBtn">Cancel</button>
+        <button class="btn btn-submit" id="submitBtn">Post it</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js" crossorigin="anonymous"></script>
+<script>
+  // ====== EDIT THESE TWO LINES with your own Supabase project values ======
+  const SUPABASE_URL = 'https://fltbigylqrsiyrylffkz.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsdGJpZ3lscXJzaXlyeWxmZmt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxOTgxNjMsImV4cCI6MjEwMDc3NDE2M30.99Tup8PaLMbTKbmxyGKyODIJfkKz5v3Ue2QcOmtyXh4';
+  // ==========================================================================
+  let supabaseClient = null;
+  if(window.supabase && window.supabase.createClient){
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } else {
+    console.error('Supabase library failed to load from the CDN — check your network/ad-blocker and reload.');
+  }
+</script>
+<script>
+(function(){
+  const SPORTS = [
+    {id:'indoor-basketball', label:'Indoor Basketball', emoji:'🏀', color:'#E8602A'},
+    {id:'outdoor-basketball', label:'Outdoor Basketball', emoji:'🏀', color:'#F0A23C'},
+    {id:'soccer', label:'Soccer', emoji:'⚽', color:'#3FAE5E'},
+    {id:'indoor-volleyball', label:'Indoor Volleyball', emoji:'🏐', color:'#E0B325'},
+    {id:'beach-volleyball', label:'Sand Volleyball', emoji:'🏖️', color:'#F0924C'},
+    {id:'tennis', label:'Tennis', emoji:'🎾', color:'#8FBE2C'},
+    {id:'pickleball', label:'Pickleball', emoji:'🏓', color:'#2E9FD6'},
+    {id:'squash', label:'Squash', emoji:'🏸', color:'#8B6FD6'},
+    {id:'swimming-pool', label:'Swimming Pool', emoji:'🏊', color:'#1FADC2'},
+    {id:'rock-climbing', label:'Rock Climbing', emoji:'🧗', color:'#D6485F'},
+    {id:'workout', label:'Workout', emoji:'🏋️', color:'#D6559C'},
+    {id:'watch-party', label:'Watch Party', emoji:'📺', color:'#C4972E'},
+    {id:'other', label:'Other', emoji:'🔥', color:'#6E7D70'},
+  ];
+  const sportById = Object.fromEntries(SPORTS.map(s=>[s.id,s]));
+
+  let games = [];
+  let feedback = [];
+  let activeFilter = 'all';
+  let myName = '';
+  let collegeName = 'Texas Tech';
+  let selectedSport = 'basketball';
+  let selectedRating = 5;
+  let pastExpanded = false;
+  const PAST_RETENTION_DAYS = 10;
+  let myNotifications = [];
+
+  const feedEl = document.getElementById('feed');
+  const tabsEl = document.getElementById('tabs');
+  const toastEl = document.getElementById('toast');
+  const overlay = document.getElementById('overlay');
+  const collegeNameEl = document.getElementById('collegeName');
+
+  function showToast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    setTimeout(()=>toastEl.classList.remove('show'), 1800);
+  }
+
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+  async function loadGames(){
+    const { data, error } = await supabaseClient.from('games').select('*').order('datetime', { ascending: true });
+    if(error){ console.error(error); games = []; return; }
+    games = (data || []).map(r => ({
+      id: r.id, sport: r.sport, title: r.title, location: r.location, notes: r.notes,
+      host: r.host, datetime: r.datetime, maxSpots: r.max_spots, joiners: r.joiners || [],
+      createdAt: new Date(r.created_at).getTime()
+    }));
+  }
+  async function insertGame(g){
+    const { error } = await supabaseClient.from('games').insert({
+      id: g.id, sport: g.sport, title: g.title, location: g.location, notes: g.notes,
+      host: g.host, datetime: g.datetime, max_spots: g.maxSpots, joiners: g.joiners
+    });
+    if(error){ console.error(error); showToast("Couldn't save — try again"); }
+  }
+  async function updateGameJoiners(id, joiners){
+    const { error } = await supabaseClient.from('games').update({ joiners }).eq('id', id);
+    if(error){ console.error(error); showToast("Couldn't save — try again"); }
+  }
+  async function purgeOldGames(){
+    // Actual deletion now happens server-side via a scheduled Supabase cron job
+    // (see schedule-cleanup.sql) — the browser no longer needs delete access.
+    // This just keeps the in-memory list consistent with the retention window.
+    const cutoff = Date.now() - PAST_RETENTION_DAYS*24*60*60*1000;
+    games = games.filter(g => new Date(g.datetime).getTime() >= cutoff);
+  }
+  async function loadCollegeName(){
+    try{
+      const { data, error } = await supabaseClient.from('app_settings').select('value').eq('key', 'college_name').maybeSingle();
+      if(error) console.error('loadCollegeName:', error);
+      if(data && data.value) collegeName = data.value;
+    }catch(e){ console.error('loadCollegeName threw:', e); }
+  }
+  async function saveCollegeName(name){
+    try{
+      const { error } = await supabaseClient.from('app_settings').upsert({ key: 'college_name', value: name });
+      if(error) console.error('saveCollegeName:', error);
+    }catch(e){ console.error('saveCollegeName threw:', e); }
+  }
+  async function loadMyName(){
+    try{
+      const v = localStorage.getItem('campus-my-name');
+      if(v) myName = v;
+    }catch(e){}
+  }
+  async function saveMyName(name){
+    try{ localStorage.setItem('campus-my-name', name); }catch(e){}
+  }
+  async function loadFeedback(){
+    const { data, error } = await supabaseClient.from('feedback').select('*').order('created_at', { ascending: false });
+    if(error){ console.error(error); feedback = []; return; }
+    feedback = (data || []).map(r => ({ rating: r.rating, comment: r.comment, name: r.name, createdAt: new Date(r.created_at).getTime() }));
+  }
+  async function insertFeedback(entry){
+    const { error } = await supabaseClient.from('feedback').insert({
+      id: entry.id, rating: entry.rating, comment: entry.comment, name: entry.name
+    });
+    if(error){ console.error(error); showToast("Couldn't save — try again"); }
+  }
+  async function loadMyNotifications(){
+    if(!myName){ myNotifications = []; return; }
+    const { data, error } = await supabaseClient.from('notifications').select('*')
+      .eq('recipient', myName).order('created_at', { ascending: false }).limit(50);
+    if(error){ console.error(error); myNotifications = []; return; }
+    myNotifications = (data || []).map(r => ({
+      id: r.id, gameTitle: r.game_title, joinerName: r.joiner_name,
+      createdAt: new Date(r.created_at).getTime(), read: r.read
+    }));
+  }
+  async function saveMyNotifications(){
+    if(!myName) return;
+    await supabaseClient.from('notifications').update({ read: true }).eq('recipient', myName).eq('read', false);
+  }
+  async function notifyHost(hostName, gameTitle, joinerName){
+    if(!hostName || hostName === joinerName) return;
+    const { error } = await supabaseClient.from('notifications').insert({
+      id: uid(), recipient: hostName, game_title: gameTitle, joiner_name: joinerName
+    });
+    if(error) console.error(error);
+  }
+  function updateBellBadge(){
+    const unread = myNotifications.filter(n => !n.read).length;
+    const badge = document.getElementById('bellBadge');
+    if(unread > 0){ badge.style.display = 'inline-block'; badge.textContent = unread > 9 ? '9+' : unread; }
+    else{ badge.style.display = 'none'; }
+  }
+  function timeAgo(ts){
+    const diff = Date.now() - ts;
+    const mins = Math.floor(diff/60000);
+    if(mins < 1) return 'just now';
+    if(mins < 60) return mins + 'm ago';
+    const hrs = Math.floor(mins/60);
+    if(hrs < 24) return hrs + 'h ago';
+    return Math.floor(hrs/24) + 'd ago';
+  }
+  function renderNotifList(){
+    const el = document.getElementById('notifList');
+    if(myNotifications.length === 0){
+      el.innerHTML = `<div class="empty" style="padding:30px 10px;"><div class="big">🔔</div><p>No notifications yet — you'll see them here when someone joins a game you're hosting.</p></div>`;
+      return;
+    }
+    el.innerHTML = myNotifications.map(n => `
+      <div class="notif-item ${n.read ? '' : 'unread'}">
+        <span class="notif-icon">🙋</span>
+        <div>
+          <div class="notif-text"><b>${escapeHtml(n.joinerName)}</b> joined your game "<b>${escapeHtml(n.gameTitle)}</b>"</div>
+          <div class="notif-time">${timeAgo(n.createdAt)}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function fmtWhen(iso){
+    const d = new Date(iso);
+    if(isNaN(d)) return 'Time TBD';
+    const now = new Date();
+    const isToday = d.toDateString() === now.toDateString();
+    const tmrw = new Date(now); tmrw.setDate(now.getDate()+1);
+    const isTomorrow = d.toDateString() === tmrw.toDateString();
+    const time = d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+    if(isToday) return 'Today · ' + time;
+    if(isTomorrow) return 'Tomorrow · ' + time;
+    return d.toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'}) + ' · ' + time;
+  }
+
+  function initials(name){
+    return (name||'?').trim().split(/\s+/).slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('') || '?';
+  }
+
+  function renderTabs(){
+    const all = [{id:'all', label:'All', emoji:'🎯', color:'#152219'}, ...SPORTS];
+    tabsEl.innerHTML = all.map(s => `
+      <div class="tab ${activeFilter===s.id?'active':''}" data-id="${s.id}" style="border-bottom:2px solid ${s.color}">
+        <span class="tab-icon">${s.emoji}</span>${s.label}
+      </div>
+    `).join('');
+    tabsEl.querySelectorAll('.tab').forEach(t=>{
+      t.addEventListener('click', ()=>{ activeFilter = t.dataset.id; renderTabs(); renderFeed(); });
+    });
+  }
+
+  function renderSportPicker(){
+    const picker = document.getElementById('sportPicker');
+    picker.innerHTML = SPORTS.map(s => `
+      <div class="sport-opt ${selectedSport===s.id?'active':''}" data-id="${s.id}">
+        <span class="emo">${s.emoji}</span>${s.label}
+      </div>
+    `).join('');
+    picker.querySelectorAll('.sport-opt').forEach(el=>{
+      el.addEventListener('click', ()=>{ selectedSport = el.dataset.id; renderSportPicker(); });
+    });
+  }
+
+  function renderStarPicker(){
+    const el = document.getElementById('starPicker');
+    el.innerHTML = [1,2,3,4,5].map(n => `<span class="star ${n<=selectedRating?'filled':''}" data-n="${n}">★</span>`).join('');
+    el.querySelectorAll('.star').forEach(s=>{
+      s.addEventListener('click', ()=>{ selectedRating = parseInt(s.dataset.n,10); renderStarPicker(); });
+    });
+  }
+
+  function staticStars(rating){
+    const full = Math.round(rating);
+    return Array.from({length:5}).map((_,i)=> `<span style="color:${i<full ? 'var(--lime)' : '#DDD'}">★</span>`).join('');
+  }
+
+  function renderRatingSummary(){
+    const el = document.getElementById('ratingSummary');
+    if(feedback.length === 0){
+      el.style.borderBottom = 'none';
+      el.style.paddingBottom = '0';
+      el.style.marginBottom = '12px';
+      el.innerHTML = `<div style="color:var(--muted); font-size:13px;">No reviews yet — be the first to share feedback.</div>`;
+      return;
+    }
+    el.style.borderBottom = '1px solid var(--line)';
+    el.style.paddingBottom = '16px';
+    el.style.marginBottom = '18px';
+    const avg = feedback.reduce((s,f)=>s+f.rating,0) / feedback.length;
+    el.innerHTML = `
+      <div class="avg display">${avg.toFixed(1)}</div>
+      <div>
+        <div class="review-stars">${staticStars(avg)}</div>
+        <div class="meta">${feedback.length} review${feedback.length===1?'':'s'}</div>
+      </div>
+    `;
+  }
+
+  function renderReviewsList(){
+    const listEl = document.getElementById('reviewsList');
+    if(feedback.length === 0){ listEl.innerHTML = ''; return; }
+    const sorted = [...feedback].sort((a,b)=> b.createdAt - a.createdAt);
+    listEl.innerHTML = sorted.map(f => `
+      <div class="review-card">
+        <div class="review-top">
+          <span class="review-name">${escapeHtml(f.name || 'Anonymous')}</span>
+          <span class="review-stars">${staticStars(f.rating)}</span>
+        </div>
+        ${f.comment ? `<div class="review-comment">${escapeHtml(f.comment)}</div>` : ''}
+      </div>
+    `).join('');
+  }
+
+  function renderFeed(){
+    const now = Date.now();
+    let list = games.filter(g => activeFilter==='all' || g.sport===activeFilter);
+    const upcoming = list.filter(g => new Date(g.datetime).getTime() >= now - 1000*60*60*2)
+                         .sort((a,b)=> new Date(a.datetime) - new Date(b.datetime));
+    const past = list.filter(g => new Date(g.datetime).getTime() < now - 1000*60*60*2)
+                      .sort((a,b)=> new Date(b.datetime) - new Date(a.datetime));
+
+    if(upcoming.length === 0 && past.length === 0){
+      feedEl.innerHTML = `
+        <div class="empty">
+          <div class="big">🏟️</div>
+          <div class="display" style="font-size:22px;">No games posted yet</div>
+          <p>Be the first — tap "Post a game" below and get a run going.</p>
+        </div>`;
+      return;
+    }
+
+    let html = '';
+    if(upcoming.length > 0){
+      html += `<div class="section-label">Upcoming · ${upcoming.length}</div>` +
+        upcoming.map(g => cardHTML(g, false)).join('');
+    } else {
+      html += `
+        <div class="empty" style="padding:30px 20px;">
+          <div class="big">🏟️</div>
+          <p>No upcoming games in this category yet. Be the first to post one.</p>
+        </div>`;
+    }
+
+    if(past.length > 0){
+      html += `
+        <div class="past-toggle" id="pastToggle">
+          <span>Past games · ${past.length}</span>
+          <span class="past-toggle-arrow">${pastExpanded ? '▲' : '▼'}</span>
+        </div>`;
+      if(pastExpanded){
+        html += past.map(g => cardHTML(g, true)).join('');
+      }
+    }
+
+    feedEl.innerHTML = html;
+
+    feedEl.querySelectorAll('[data-join]').forEach(btn=>{
+      btn.addEventListener('click', ()=>handleJoin(btn.dataset.join));
+    });
+    feedEl.querySelectorAll('[data-leave]').forEach(btn=>{
+      btn.addEventListener('click', ()=>handleLeave(btn.dataset.leave));
+    });
+    const toggle = document.getElementById('pastToggle');
+    if(toggle){
+      toggle.addEventListener('click', ()=>{ pastExpanded = !pastExpanded; renderFeed(); });
+    }
+  }
+
+  function cardHTML(g, isPast){
+    const sport = sportById[g.sport] || sportById.other;
+    const spots = g.maxSpots || 0;
+    const joined = g.joiners || [];
+    const full = joined.length >= spots;
+    const iAmIn = myName && joined.includes(myName);
+    const chips = joined.slice(0,5).map(n => `<div class="joiner-chip" title="${escapeHtml(n)}">${escapeHtml(initials(n))}</div>`).join('');
+    const extra = joined.length > 5 ? `<div class="joiner-chip">+${joined.length-5}</div>` : '';
+
+    let actionBtn;
+    if(isPast){
+      actionBtn = '';
+    } else if(iAmIn){
+      actionBtn = `<button class="btn btn-leave" data-leave="${g.id}">Leave</button>`;
+    } else if(full){
+      actionBtn = `<button class="btn btn-full" disabled>Full</button>`;
+    } else {
+      actionBtn = `<button class="btn btn-join" data-join="${g.id}">Join</button>`;
+    }
+
+    return `
+      <div class="card ${isPast ? 'card-past' : ''}">
+        <div class="card-top">
+          <span class="card-sport" style="background:${sport.color}22; color:${sport.color};">
+            ${sport.emoji} ${sport.label}
+          </span>
+          <div class="scoreboard ${full?'full':''}">
+            <span class="count mono">${joined.length}/${spots}</span>
+            <span class="label">${isPast ? 'played' : 'in'}</span>
+          </div>
+        </div>
+        <div class="card-title">${escapeHtml(g.title)}</div>
+        <div class="card-meta">
+          <span>🕒 ${fmtWhen(g.datetime)}</span>
+          <span>📍 ${escapeHtml(g.location)}</span>
+        </div>
+        ${g.notes ? `<div class="card-notes">${escapeHtml(g.notes)}</div>` : ''}
+        <div class="card-footer">
+          <div>
+            <div class="joiners">${chips}${extra}</div>
+            <div class="host-tag" style="margin-top:6px;">Hosted by <b>${escapeHtml(g.host)}</b></div>
+          </div>
+          ${actionBtn}
+        </div>
+      </div>
+    `;
+  }
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str ?? '';
+    return d.innerHTML;
+  }
+
+  function ensureName(cb){
+    if(myName){ cb(myName); return; }
+    const name = prompt("What's your name? (so people know who's joining)");
+    if(name && name.trim()){
+      myName = name.trim();
+      saveMyName(myName);
+      loadMyNotifications().then(updateBellBadge);
+      cb(myName);
+    }
+  }
+
+  async function handleJoin(id){
+    ensureName(async (name)=>{
+      const g = games.find(x=>x.id===id);
+      if(!g) return;
+      g.joiners = g.joiners || [];
+      if(g.joiners.length >= g.maxSpots){ showToast('That game just filled up'); renderFeed(); return; }
+      if(!g.joiners.includes(name)){
+        g.joiners.push(name);
+        await notifyHost(g.host, g.title, name);
+      }
+      await updateGameJoiners(g.id, g.joiners);
+      renderFeed();
+      showToast("You're in! 🎉");
+    });
+  }
+
+  async function handleLeave(id){
+    const g = games.find(x=>x.id===id);
+    if(!g || !myName) return;
+    g.joiners = (g.joiners||[]).filter(n=>n!==myName);
+    await updateGameJoiners(g.id, g.joiners);
+    renderFeed();
+    showToast('Left the game');
+  }
+
+  // modal wiring
+  const overlayEl = document.getElementById('overlay');
+  document.getElementById('openModalBtn').addEventListener('click', ()=>{
+    renderSportPicker();
+    document.getElementById('fHost').value = myName || '';
+    const d = new Date(Date.now() + 1000*60*60*2);
+    d.setMinutes(Math.round(d.getMinutes()/15)*15);
+    document.getElementById('fDatetime').value = d.toISOString().slice(0,16);
+    overlayEl.classList.add('open');
+  });
+  document.getElementById('closeModal').addEventListener('click', ()=>overlayEl.classList.remove('open'));
+  document.getElementById('cancelBtn').addEventListener('click', ()=>overlayEl.classList.remove('open'));
+  overlayEl.addEventListener('click', (e)=>{ if(e.target===overlayEl) overlayEl.classList.remove('open'); });
+
+  // feedback modal wiring
+  const feedbackOverlayEl = document.getElementById('feedbackOverlay');
+  document.getElementById('openFeedbackBtn').addEventListener('click', ()=>{
+    selectedRating = 5;
+    renderStarPicker();
+    document.getElementById('fbComment').value = '';
+    document.getElementById('fbName').value = myName || '';
+    renderRatingSummary();
+    renderReviewsList();
+    feedbackOverlayEl.classList.add('open');
+  });
+  document.getElementById('closeFeedback').addEventListener('click', ()=>feedbackOverlayEl.classList.remove('open'));
+  document.getElementById('fbCancelBtn').addEventListener('click', ()=>feedbackOverlayEl.classList.remove('open'));
+  feedbackOverlayEl.addEventListener('click', (e)=>{ if(e.target===feedbackOverlayEl) feedbackOverlayEl.classList.remove('open'); });
+
+  document.getElementById('fbSubmitBtn').addEventListener('click', async ()=>{
+    const comment = document.getElementById('fbComment').value.trim();
+    const name = document.getElementById('fbName').value.trim();
+    const entry = { id: uid(), rating: selectedRating, comment, name, createdAt: Date.now() };
+    feedback.unshift(entry);
+    await insertFeedback(entry);
+    if(name){ myName = name; await saveMyName(name); }
+    document.getElementById('fbComment').value = '';
+    renderRatingSummary();
+    renderReviewsList();
+    showToast('Thanks for the feedback! 🤘');
+  });
+
+  // notifications wiring
+  const notifOverlayEl = document.getElementById('notifOverlay');
+  document.getElementById('bellBtn').addEventListener('click', async ()=>{
+    if(!myName){
+      showToast("Post or join a game first so we know who you are");
+      return;
+    }
+    renderNotifList();
+    notifOverlayEl.classList.add('open');
+    if(myNotifications.some(n => !n.read)){
+      myNotifications.forEach(n => n.read = true);
+      await saveMyNotifications();
+      updateBellBadge();
+    }
+  });
+  document.getElementById('closeNotif').addEventListener('click', ()=>notifOverlayEl.classList.remove('open'));
+  notifOverlayEl.addEventListener('click', (e)=>{ if(e.target===notifOverlayEl) notifOverlayEl.classList.remove('open'); });
+
+  document.getElementById('submitBtn').addEventListener('click', async ()=>{
+    const title = document.getElementById('fTitle').value.trim();
+    const location = document.getElementById('fLocation').value.trim();
+    const datetime = document.getElementById('fDatetime').value;
+    const maxSpots = parseInt(document.getElementById('fMax').value, 10) || 8;
+    const notes = document.getElementById('fNotes').value.trim();
+    const host = document.getElementById('fHost').value.trim();
+
+    if(!title || !location || !datetime || !host){
+      showToast('Fill in title, location, time & your name');
+      return;
+    }
+
+    const g = {
+      id: uid(),
+      sport: selectedSport,
+      title, location, notes, host,
+      datetime: new Date(datetime).toISOString(),
+      maxSpots,
+      joiners: [host],
+      createdAt: Date.now()
+    };
+    myName = host;
+    await saveMyName(host);
+    await loadMyNotifications();
+    updateBellBadge();
+    games.push(g);
+    await insertGame(g);
+    overlayEl.classList.remove('open');
+    ['fTitle','fLocation','fNotes'].forEach(id=>document.getElementById(id).value='');
+    renderFeed();
+    showToast('Game posted 🏟️');
+  });
+
+  // editable college name
+  collegeNameEl.addEventListener('click', ()=>{
+    const wrap = document.getElementById('collegeNameWrap');
+    wrap.innerHTML = `<input class="college-name-input" id="collegeInput" value="${escapeHtml(collegeName)}" maxlength="40"/>`;
+    const input = document.getElementById('collegeInput');
+    input.focus(); input.select();
+    const commit = async ()=>{
+      const val = input.value.trim() || 'Texas Tech';
+      collegeName = val;
+      await saveCollegeName(val);
+      wrap.innerHTML = `<span id="collegeName" class="college-name display">${escapeHtml(collegeName)}</span>`;
+      document.getElementById('collegeName').addEventListener('click', arguments.callee.caller);
+      rewireCollegeName();
+    };
+    input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') input.blur(); });
+    input.addEventListener('blur', commit);
+  });
+
+  function rewireCollegeName(){
+    const el = document.getElementById('collegeName');
+    el.replaceWith(el.cloneNode(true));
+    document.getElementById('collegeName').addEventListener('click', ()=>{
+      const wrap = document.getElementById('collegeNameWrap');
+      wrap.innerHTML = `<input class="college-name-input" id="collegeInput" value="${escapeHtml(collegeName)}" maxlength="40"/>`;
+      const input = document.getElementById('collegeInput');
+      input.focus(); input.select();
+      const commit = async ()=>{
+        const val = input.value.trim() || 'Texas Tech';
+        collegeName = val;
+        await saveCollegeName(val);
+        wrap.innerHTML = `<span id="collegeName" class="college-name display">${escapeHtml(collegeName)}</span>`;
+        rewireCollegeName();
+      };
+      input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') input.blur(); });
+      input.addEventListener('blur', commit);
+    });
+  }
+
+  async function init(){
+    renderTabs();
+    const results = await Promise.allSettled([loadGames(), loadCollegeName(), loadMyName(), loadFeedback()]);
+    const failed = results.filter(r => r.status === 'rejected');
+    if(failed.length > 0){
+      failed.forEach(f => console.error('Init step failed:', f.reason));
+      showToast("Couldn't connect to the database — check your Supabase URL/key");
+    }
+    try{ await purgeOldGames(); }catch(e){ console.error('purgeOldGames:', e); }
+    try{ await loadMyNotifications(); }catch(e){ console.error('loadMyNotifications:', e); }
+    collegeNameEl.textContent = collegeName;
+    rewireCollegeName();
+    renderFeed();
+    updateBellBadge();
+    // light polling so people see new posts and notifications without refreshing
+    setInterval(async ()=>{
+      await loadGames();
+      await purgeOldGames();
+      renderFeed();
+
+      const prevUnread = myNotifications.filter(n => !n.read).length;
+      await loadMyNotifications();
+      const newUnread = myNotifications.filter(n => !n.read).length;
+      updateBellBadge();
+      if(newUnread > prevUnread){
+        const latest = myNotifications.find(n => !n.read);
+        if(latest) showToast(`🔔 ${latest.joinerName} joined "${latest.gameTitle}"`);
+      }
+    }, 6000);
+  }
+  init();
+})();
+</script>
+</body>
+</html>
