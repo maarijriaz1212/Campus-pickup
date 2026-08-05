@@ -1,18 +1,18 @@
 # Campus Play
 
-A live web app that helps students find pickup games, workouts, and watch parties happening on campus — post what you're doing, and let others join.
+A live web app that helps students find pickup games, workouts, and watch parties happening on campus. Post what you're doing, and let others join.
 
-**[Live site →](your-live-url-here)**
+**[Live site →](https://stirring-pastelito-c9652e.netlify.app/)**
 
 ## Why I built this
 
-College is a great place to meet people through shared interests, but there's no simple, casual way to say "I'm playing basketball at 6pm, come join" and have people actually see it. This is a lightweight, no-login tool to make that easier for my campus.
+College is a great place to meet people through shared interests, but there's no simple, casual way to say "I'm playing basketball at 6pm, come join" and have people actually see it. Simple way to make campus lively again.
 
 ## Features
 
-- Post pickup games, workouts, and watch parties across a fully customizable set of sport categories — new sports can be added anytime directly from the database, no code changes needed
+- Post pickup games, workouts, and watch parties across a fully customizable set of sport categories, new sports can be added anytime directly from the database, no code changes needed
 - Join/leave games with a live "spots filled" counter, backed by atomic server-side functions so two people can't accidentally overbook the last spot
-- "My Games" view — quickly filter down to just what you've hosted or joined
+- "My Games" view  quickly filter down to just what you've hosted or joined
 - Add any game to your phone/calendar with one tap (generates a real `.ics` file)
 - In-app notifications when someone joins your game
 - Star-rating feedback/reviews system so the community can shape what gets added next
@@ -25,7 +25,7 @@ College is a great place to meet people through shared interests, but there's no
 
 ## Tech stack
 
-- **Frontend:** Vanilla HTML/CSS/JavaScript (no framework — built for simplicity and easy hosting)
+- **Frontend:** Vanilla HTML/CSS/JavaScript (no framework, built for simplicity and easy hosting)
 - **Backend:** [Supabase](https://supabase.com) (Postgres database, row-level security, Postgres functions, scheduled jobs via `pg_cron`)
 - **Hosting:** Netlify
 
@@ -69,4 +69,4 @@ No code changes needed — just add a row to the `sports` table in Supabase (Tab
 
 ---
 
-Built as a personal learning project — feedback welcome via the in-app review feature.
+Built as a personal learning project. Feedback welcome via the in-app review feature.
