@@ -65,7 +65,10 @@ No code changes needed — just add a row to the `sports` table in Supabase (Tab
 
 ## Screenshots
 
-*(add a few screenshots here once captured — feed view, post-game modal, dark mode)*
+![Feed view](Screenshot%202026-08-05%20004905.png)
+![Posting a game](Screenshot%202026-08-05%20005011.png)
+![Dark mode](Screenshot%202026-08-05%20005042.png)
+![Mobile view](WhatsApp%20Image%202026-08-05%20at%2012.51.52%20AM.jpeg)
 
 ---
 
