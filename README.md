@@ -2,7 +2,7 @@
 
 A live web app that helps students find pickup games, workouts, and watch parties happening on campus — post what you're doing, and let others join.
 
-**[Live site →](https://boisterous-choux-8e8144.netlify.app/)**
+**[Live site →](https://stirring-pastelito-c9652e.netlify.app/)**
 
 ## Why I built this
 
