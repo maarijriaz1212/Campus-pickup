@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Campus Play</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23000000'/%3E%3Ctext x='50' y='68' font-family='Arial, sans-serif' font-weight='800' font-size='42' fill='%23CC0000' text-anchor='middle'%3ECP%3C/text%3E%3C/svg%3E"/>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23000000'/%3E%3Ctext x='50' y='68' font-family='Arial, sans-serif' font-weight='800' font-size='42' fill='%23CC0000' text-anchor='middle'%3ECP%3C/text%3E%3C/svg%3E"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="Campus Play"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<meta name="theme-color" content="#000000"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --bg-card:#FFFFFF;
+    --bg-card-hover:#FFFCFC;
+    --line:#ECE7E7;
+    --chalk:#111111;
+    --muted:#6E6E6E;
+    --lime:#CC0000;
+    --lime-dark:#8C0000;
+    --red-bright:#FF3B30;
+    --orange:#E85A2A;
+    --ink-chip:#000000;
+    --ink-chip-border:#000000;
+    --field-bg:#FFFFFF;
+    --radius:16px;
+    --shadow-sm:0 1px 2px rgba(17,17,17,0.04), 0 1px 1px rgba(17,17,17,0.03);
+    --shadow-md:0 4px 16px rgba(17,17,17,0.06), 0 1px 3px rgba(17,17,17,0.04);
+    --shadow-lg:0 16px 40px rgba(17,17,17,0.10), 0 4px 10px rgba(17,17,17,0.05);
+  }
+  html[data-theme="dark"]{
+    --bg:#0C0C0C;
+    --bg-card:#181818;
+    --bg-card-hover:#212121;
+    --line:#2C2C2C;
+    --chalk:#F2F2F2;
+    --muted:#9A9A9A;
+    --lime:#FF4438;
+    --lime-dark:#FF7A6E;
+    --red-bright:#FF6B5E;
+    --ink-chip:#000000;
+    --ink-chip-border:#333333;
+    --field-bg:#0F0F0F;
+    --shadow-sm:0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md:0 4px 16px rgba(0,0,0,0.4);
+    --shadow-lg:0 16px 40px rgba(0,0,0,0.5);
+  }
+  html[data-theme="dark"] #app{
+    background: radial-gradient(circle at 15% 0%, #1A1010 0%, transparent 45%), var(--bg);
+  }
+  *{box-sizing:border-box;}
+  body,html{margin:0;padding:0;}
+  #app{
+    font-family:'Inter',sans-serif;
+    background:
+      radial-gradient(circle at 15% 0%, #FBEAEA 0%, transparent 45%),
+      var(--bg);
+    color:var(--chalk);
+    min-height:100vh;
+    padding-bottom:100px;
+  }
+  .display{font-family:'Bebas Neue',sans-serif; letter-spacing:0.02em;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  /* header */
+  .hero{
+    padding:28px 20px 18px;
+    border-bottom:1px solid var(--line);
+    background:
+      repeating-linear-gradient(90deg, transparent, transparent 38px, rgba(204,0,0,0.05) 38px, rgba(204,0,0,0.05) 39px);
+    position:relative;
+  }
+  .hero-top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  .college-name{
+    font-size:42px; line-height:1; color:var(--chalk); cursor:text;
+    border-bottom:2px dashed transparent; letter-spacing:0.01em;
+  }
+  .college-name:hover{border-bottom-color:var(--muted);}
+  .college-name-input{
+    font-family:'Bebas Neue',sans-serif; font-size:34px; background:transparent; color:var(--chalk);
+    border:none; border-bottom:2px solid var(--lime-dark); outline:none; width:100%; letter-spacing:0.02em;
+  }
+  .tagline{color:var(--muted); font-size:13px; margin-top:4px; font-weight:500;}
+  .live-badge{
+    display:flex; align-items:center; gap:6px; font-size:11px; color:var(--lime-dark);
+    text-transform:uppercase; letter-spacing:0.12em; font-weight:700; white-space:nowrap;
+  }
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--lime); box-shadow:0 0 8px var(--lime); animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+
+  .hero-stat{
+    margin-top:16px; display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; color:rgba(255,255,255,0.8);
+    background:var(--ink-chip); border-radius:999px; padding:6px 14px 6px 6px;
+  }
+  .hero-stat .n{
+    background:var(--red-bright); color:#FFFFFF; font-weight:700; border-radius:999px;
+    padding:2px 9px; font-size:12px;
+  }
+
+  /* sport tabs */
+  .tabs{
+    display:flex; gap:8px; overflow-x:auto; padding:14px 20px; border-bottom:1px solid var(--line);
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    flex:0 0 auto; display:flex; align-items:center; gap:7px; padding:9px 15px; border-radius:999px;
+    border:1px solid var(--line); background:var(--bg-card); color:var(--muted); font-size:13px; font-weight:600;
+    cursor:pointer; transition:all .15s ease; white-space:nowrap;
+  }
+  .tab:hover{background:var(--bg-card-hover); color:var(--chalk); transform:translateY(-1px);}
+  .tab.active{background:var(--ink-chip); color:#FFFFFF; border-color:var(--ink-chip) !important; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+  .tab-icon{font-size:14px; line-height:1;}
+
+  .mine-toggle{
+    margin:2px 0 4px; padding:7px 14px; border-radius:999px; border:1px solid var(--line);
+    background:var(--bg-card); color:var(--muted); font-size:12px; font-weight:700; cursor:pointer;
+    transition:all .15s ease;
+  }
+  .mine-toggle:hover{color:var(--chalk); background:var(--bg-card-hover);}
+  .mine-toggle.active{background:var(--lime); color:#FFFFFF; border-color:var(--lime); box-shadow:0 3px 10px rgba(204,0,0,0.28);}
+
+  .btn-cal{
+    background:none; border:1px solid var(--line); border-radius:999px; width:34px; height:34px;
+    font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .15s ease;
+  }
+  .btn-cal:hover{background:var(--bg-card-hover); border-color:var(--muted); transform:translateY(-1px);}
+
+  /* feed */
+  .feed{padding:16px 20px; max-width:640px; margin:0 auto;}
+  .section-label{
+    font-size:11px; text-transform:uppercase; letter-spacing:0.14em; color:var(--muted); font-weight:700;
+    margin:22px 0 10px; display:flex; align-items:center; gap:8px;
+  }
+  .section-label::after{content:''; flex:1; height:1px; background:var(--line);}
+
+  .card{
+    position:relative; background:var(--bg-card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 18px 18px 22px; margin-bottom:14px; box-shadow:var(--shadow-sm);
+    transition:transform .18s cubic-bezier(.2,.8,.2,1), box-shadow .18s ease, border-color .18s ease;
+    overflow:hidden;
+  }
+  .card::before{
+    content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+    background:var(--card-accent, var(--lime));
+  }
+  .card:hover{ transform:translateY(-3px); box-shadow:var(--shadow-lg); border-color:#F0DEDE; }
+  .card-past{opacity:0.68; box-shadow:none;}
+  .card-past:hover{transform:none; box-shadow:none; border-color:var(--line);}
+
+  .past-toggle{
+    display:flex; align-items:center; justify-content:space-between; cursor:pointer;
+    padding:12px 4px; margin:18px 0 10px; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted);
+  }
+  .past-toggle:hover{color:var(--chalk);}
+  .past-toggle-arrow{font-size:10px;}
+
+  .bell-btn{
+    position:relative; background:none; border:none; font-size:19px; cursor:pointer;
+    color:var(--chalk); padding:2px;
+  }
+  .theme-toggle{
+    background:none; border:none; font-size:19px; cursor:pointer; color:var(--chalk); padding:2px;
+    transition:transform .2s ease;
+  }
+  .theme-toggle:hover{transform:rotate(20deg);}
+  .bell-badge{
+    position:absolute; top:-5px; right:-8px; background:var(--lime); color:#FFFFFF;
+    font-size:10px; font-weight:800; border-radius:999px; padding:1px 5px; line-height:1.4; min-width:14px; text-align:center;
+  }
+  .notif-item{
+    display:flex; gap:10px; padding:12px 4px; border-bottom:1px solid var(--line);
+  }
+  .notif-item:last-child{border-bottom:none;}
+  .notif-item .notif-icon{font-size:18px;}
+  .notif-item .notif-text{font-size:13px; line-height:1.5;}
+  .notif-item .notif-text b{font-weight:700;}
+  .notif-item .notif-time{font-size:11px; color:var(--muted); margin-top:2px;}
+  .notif-item.unread{background:rgba(204,0,0,0.05); border-radius:8px;}
+  .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .card-sport{
+    display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.08em; padding:4px 9px; border-radius:6px;
+  }
+  .card-title{font-size:19px; font-weight:800; margin:10px 0 2px; color:var(--chalk);}
+  .card-meta{color:var(--muted); font-size:13px; display:flex; flex-wrap:wrap; gap:x; margin-top:6px; line-height:1.6;}
+  .card-meta span{display:inline-flex; align-items:center; gap:5px; margin-right:14px;}
+  .card-notes{color:#4A5A4C; font-size:14px; margin-top:10px; line-height:1.5;}
+
+  .scoreboard{
+    display:flex; align-items:center; gap:8px; background:var(--ink-chip); border:1px solid var(--ink-chip-border);
+    border-radius:8px; padding:6px 10px; flex:0 0 auto;
+  }
+  .scoreboard .count{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:15px; color:var(--red-bright);}
+  .scoreboard.full .count{color:var(--orange);}
+  .scoreboard .label{font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em;}
+
+  .card-footer{display:flex; align-items:center; justify-content:space-between; margin-top:14px; gap:10px;}
+  .joiners{display:flex; align-items:center;}
+  .joiner-chip{
+    width:26px;height:26px;border-radius:50%;background:var(--ink-chip);border:2px solid var(--bg-card);
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#FFFFFF;
+    margin-left:-8px;
+  }
+  .joiner-chip:first-child{margin-left:0;}
+  .host-tag{font-size:12px; color:var(--muted);}
+  .host-tag b{color:var(--chalk); font-weight:700;}
+
+  .btn{
+    border:none; border-radius:999px; padding:9px 18px; font-weight:700; font-size:13px; cursor:pointer;
+    transition:transform .15s cubic-bezier(.2,.8,.2,1), box-shadow .15s ease, opacity .15s ease; font-family:'Inter',sans-serif;
+  }
+  .btn:active{transform:scale(0.96);}
+  .btn-join{background:linear-gradient(135deg, #E00000, #A30000); color:#FFFFFF; box-shadow:0 3px 10px rgba(204,0,0,0.28);}
+  .btn-join:hover{transform:translateY(-1px); box-shadow:0 5px 16px rgba(204,0,0,0.38);}
+  .btn-join:hover{opacity:0.88;}
+  .btn-leave{background:transparent; color:var(--muted); border:1px solid var(--line);}
+  .btn-leave:hover{color:var(--chalk); border-color:var(--muted);}
+  .btn-full{background:var(--line); color:var(--muted); cursor:not-allowed;}
+
+  .empty{
+    text-align:center; padding:50px 20px; color:var(--muted);
+  }
+  .empty .big{font-size:42px; margin-bottom:6px;}
+  .empty p{font-size:14px; max-width:280px; margin:6px auto 0;}
+
+  /* fab */
+  .fab{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:linear-gradient(135deg, #E00000, #A30000); color:#FFFFFF; border:none; border-radius:999px;
+    padding:15px 26px; font-weight:800; font-size:15px; display:flex; align-items:center; gap:8px;
+    box-shadow:0 10px 28px rgba(204,0,0,0.35); cursor:pointer; z-index:20;
+    transition:transform .15s cubic-bezier(.2,.8,.2,1), box-shadow .15s ease;
+  }
+  .fab:hover{transform:translateX(-50%) translateY(-2px); box-shadow:0 14px 34px rgba(204,0,0,0.42);}
+  .fab:active{transform:translateX(-50%) scale(0.96);}
+
+  .fab-feedback{
+    position:fixed; bottom:24px; right:20px; width:50px; height:50px; border-radius:50%;
+    background:var(--ink-chip); color:#FFFFFF; border:none; font-size:20px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 20px rgba(0,0,0,0.28); z-index:20;
+    transition:transform .15s cubic-bezier(.2,.8,.2,1), box-shadow .15s ease;
+  }
+  .fab-feedback:hover{transform:translateY(-2px); box-shadow:0 12px 26px rgba(0,0,0,0.34);}
+  .fab-feedback:active{transform:scale(0.94);}
+
+  /* modal */
+  .overlay{
+    position:fixed; inset:0; background:rgba(6,10,7,0.72); backdrop-filter:blur(3px);
+    display:flex; align-items:flex-end; justify-content:center; z-index:50; opacity:0; pointer-events:none;
+    transition:opacity .2s ease;
+  }
+  .overlay.open{opacity:1; pointer-events:auto;}
+  .modal{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:26px 26px 0 0;
+    width:100%; max-width:480px; max-height:88vh; overflow-y:auto; padding:26px 24px;
+    transform:translateY(100%); transition:transform .3s cubic-bezier(.2,.8,.2,1);
+    box-shadow:0 -20px 60px rgba(17,17,17,0.18);
+  }
+  .overlay.open .modal{transform:translateY(0);}
+  .modal-title{font-size:26px; margin-bottom:16px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:6px;}
+  .field input, .field select, .field textarea{
+    width:100%; background:var(--field-bg); border:1px solid var(--line); color:var(--chalk); border-radius:9px;
+    padding:11px 12px; font-size:14px; font-family:'Inter',sans-serif; outline:none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--lime-dark);}
+  .field textarea{resize:vertical; min-height:60px;}
+  .sport-picker{display:grid; grid-template-columns:repeat(4,1fr); gap:8px;}
+  .sport-opt{
+    border:1px solid var(--line); background:var(--field-bg); border-radius:10px; padding:10px 4px;
+    text-align:center; cursor:pointer; font-size:11px; font-weight:700; color:var(--muted);
+  }
+  .sport-opt .emo{font-size:20px; display:block; margin-bottom:4px;}
+  .sport-opt.active{border-color:var(--lime-dark); color:var(--chalk); background:rgba(204,0,0,0.10);}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-cancel{flex:1; background:transparent; border:1px solid var(--line); color:var(--muted); padding:13px;}
+  .btn-submit{flex:2; background:linear-gradient(135deg, #E00000, #A30000); color:#FFFFFF; padding:13px; font-size:15px; box-shadow:0 3px 10px rgba(204,0,0,0.28);}
+  .btn-submit:hover{transform:translateY(-1px); box-shadow:0 5px 16px rgba(204,0,0,0.38);}
+  .close-x{position:absolute; top:14px; right:14px; background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer;}
+
+  .toast{
+    position:fixed; top:18px; left:50%; transform:translateX(-50%) translateY(-140%);
+    background:#152219; color:#FFFFFF; padding:11px 20px; border-radius:999px; font-weight:700; font-size:13px;
+    z-index:100; transition:transform .25s ease; box-shadow:0 6px 20px rgba(0,0,0,0.18);
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);}
+
+  ::selection{background:var(--lime); color:#FFFFFF;}
+
+  /* reviews */
+  .star-picker{display:flex; gap:6px; font-size:30px;}
+  .star-picker .star{color:#DDD; cursor:pointer; transition:color .1s ease, transform .1s ease;}
+  .star-picker .star:hover{transform:scale(1.08);}
+  .star-picker .star.filled{color:var(--lime);}
+  .review-card{background:var(--bg-card); border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-bottom:8px;}
+  .review-top{display:flex; justify-content:space-between; align-items:center; gap:8px;}
+  .review-name{font-size:13px; font-weight:700;}
+  .review-stars{font-size:13px; letter-spacing:1px;}
+  .review-comment{font-size:13px; color:#333; margin-top:6px; line-height:1.5;}
+  .rating-summary{display:flex; align-items:center; gap:12px; margin-bottom:18px; padding-bottom:16px; border-bottom:1px solid var(--line);}
+  .rating-summary .avg{font-size:36px; line-height:1;}
+  .rating-summary .meta{font-size:12px; color:var(--muted); margin-top:2px;}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <div id="collegeNameWrap">
+          <span id="collegeName" class="college-name display">Loading…</span>
+        </div>
+        <div class="tagline">Post a game. Find a game. Meet your campus.</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">🌙</button>
+        <button class="bell-btn" id="bellBtn" title="Notifications">
+          🔔<span class="bell-badge" id="bellBadge" style="display:none;">0</span>
+        </button>
+        <div class="live-badge"><span class="live-dot"></span>Live board</div>
+      </div>
+    </div>
+    <div class="hero-stat" id="heroStat"></div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div style="padding:0 20px;">
+    <button class="mine-toggle" id="mineToggle">⭐ My games</button>
+  </div>
+
+  <div class="feed" id="feed"></div>
+
+  <button class="fab" id="openModalBtn">+ Post a game</button>
+  <button class="fab-feedback" id="openFeedbackBtn" title="Leave feedback">💬</button>
+
+  <div class="overlay" id="feedbackOverlay">
+    <div class="modal">
+      <button class="close-x" id="closeFeedback">✕</button>
+      <div class="modal-title display">Feedback &amp; reviews</div>
+
+      <div class="rating-summary" id="ratingSummary"></div>
+
+      <div class="field">
+        <label>Your rating</label>
+        <div class="star-picker" id="starPicker"></div>
+      </div>
+
+      <div class="field">
+        <label>What should be improved?</label>
+        <textarea id="fbComment" placeholder="Bugs, ideas, missing sports, anything..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Your name (optional)</label>
+        <input id="fbName" type="text" placeholder="Anonymous" maxlength="30"/>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-cancel" id="fbCancelBtn">Cancel</button>
+        <button class="btn btn-submit" id="fbSubmitBtn">Submit review</button>
+      </div>
+
+      <div class="section-label" style="margin-top:26px;">Recent reviews</div>
+      <div id="reviewsList"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="notifOverlay">
+    <div class="modal">
+      <button class="close-x" id="closeNotif">✕</button>
+      <div class="modal-title display">Notifications</div>
+      <div id="notifList"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="introOverlay">
+    <div class="modal">
+      <div class="modal-title display">How Campus Play works</div>
+      <div style="font-size:14px; line-height:1.7; color:var(--chalk);">
+        <p>🏀 <b>See a game you like?</b> Tap Join — the host gets notified instantly.</p>
+        <p>📣 <b>Want to start one?</b> Tap "+ Post a game," pick a sport, time, and location.</p>
+        <p>⭐ <b>Keep track</b> of anything you've hosted or joined under "My games."</p>
+        <p style="color:var(--muted); font-size:13px; margin-top:14px;">No login needed — just show up and play.</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-submit" id="introGotIt" style="flex:1;">Got it, let's go</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <button class="close-x" id="closeModal">✕</button>
+      <div class="modal-title display">Post a game</div>
+
+      <div class="field">
+        <label>Sport</label>
+        <div class="sport-picker" id="sportPicker"></div>
+      </div>
+
+      <div class="field">
+        <label>Title</label>
+        <input id="fTitle" type="text" placeholder="e.g. 5v5 run at the rec center" maxlength="60"/>
+      </div>
+
+      <div class="field">
+        <label>Location</label>
+        <input id="fLocation" type="text" placeholder="e.g. Rec Center Court 2" maxlength="60"/>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>Date &amp; time</label>
+          <input id="fDatetime" type="datetime-local"/>
+        </div>
+        <div class="field">
+          <label>Max spots</label>
+          <input id="fMax" type="number" min="2" max="60" value="8"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Notes (optional)</label>
+        <textarea id="fNotes" placeholder="Skill level, what to bring, anything else..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Your name</label>
+        <input id="fHost" type="text" placeholder="So people know who's hosting" maxlength="30"/>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-cancel" id="cancelBtn">Cancel</button>
+        <button class="btn btn-submit" id="submitBtn">Post it</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js" crossorigin="anonymous"></script>
+<script>
+  // ====== EDIT THESE TWO LINES with your own Supabase project values ======
+  const SUPABASE_URL = 'https://fltbigylqrsiyrylffkz.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsdGJpZ3lscXJzaXlyeWxmZmt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxOTgxNjMsImV4cCI6MjEwMDc3NDE2M30.99Tup8PaLMbTKbmxyGKyODIJfkKz5v3Ue2QcOmtyXh4';
+  // ==========================================================================
+  let supabaseClient = null;
+  if(window.supabase && window.supabase.createClient){
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } else {
+    console.error('Supabase library failed to load from the CDN — check your network/ad-blocker and reload.');
+  }
+</script>
+<script>
+(function(){
+  let SPORTS = [];
+  let sportById = {};
+  async function loadSports(){
+    try{
+      const { data, error } = await supabaseClient.from('sports').select('*').order('sort_order', { ascending: true });
+      if(error || !data || data.length === 0){
+        console.error('loadSports:', error);
+        // fallback list in case the sports table isn't reachable, so the app still works
+        SPORTS = [
+          {id:'basketball', label:'Basketball', emoji:'🏀', color:'#E8602A'},
+          {id:'soccer', label:'Soccer', emoji:'⚽', color:'#3FAE5E'},
+          {id:'other', label:'Other', emoji:'🔥', color:'#6E7D70'},
+        ];
+      } else {
+        SPORTS = data.map(r => ({ id: r.id, label: r.label, emoji: r.emoji, color: r.color }));
+      }
+    }catch(e){
+      console.error('loadSports threw:', e);
+      SPORTS = [{id:'other', label:'Other', emoji:'🔥', color:'#6E7D70'}];
+    }
+    sportById = Object.fromEntries(SPORTS.map(s=>[s.id,s]));
+  }
+
+  let games = [];
+  let feedback = [];
+  let activeFilter = 'all';
+  let myName = '';
+  let collegeName = 'Texas Tech';
+  let selectedSport = null;
+  let selectedRating = 5;
+  let pastExpanded = false;
+  const PAST_RETENTION_DAYS = 10;
+  let myNotifications = [];
+  let showMineOnly = false;
+  const POST_LIMIT = 3;
+  const POST_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+  let cooldownInterval = null;
+
+  const feedEl = document.getElementById('feed');
+  const tabsEl = document.getElementById('tabs');
+  const toastEl = document.getElementById('toast');
+  const overlay = document.getElementById('overlay');
+  const collegeNameEl = document.getElementById('collegeName');
+
+  function showToast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    setTimeout(()=>toastEl.classList.remove('show'), 1800);
+  }
+
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+  async function loadGames(){
+    const { data, error } = await supabaseClient.from('games').select('*').order('datetime', { ascending: true });
+    if(error){ console.error(error); games = []; return; }
+    games = (data || []).map(r => ({
+      id: r.id, sport: r.sport, title: r.title, location: r.location, notes: r.notes,
+      host: r.host, datetime: r.datetime, maxSpots: r.max_spots, joiners: r.joiners || [],
+      createdAt: new Date(r.created_at).getTime()
+    }));
+  }
+  async function insertGame(g){
+    const { error } = await supabaseClient.from('games').insert({
+      id: g.id, sport: g.sport, title: g.title, location: g.location, notes: g.notes,
+      host: g.host, datetime: g.datetime, max_spots: g.maxSpots, joiners: g.joiners
+    });
+    if(error){ console.error(error); showToast("Couldn't save — try again"); }
+  }
+  async function joinGameRpc(gameId, name){
+    const { data, error } = await supabaseClient.rpc('join_game', { p_game_id: gameId, p_name: name });
+    if(error) throw error;
+    return data;
+  }
+  async function leaveGameRpc(gameId, name){
+    const { data, error } = await supabaseClient.rpc('leave_game', { p_game_id: gameId, p_name: name });
+    if(error) throw error;
+    return data;
+  }
+  async function purgeOldGames(){
+    // Actual deletion now happens server-side via a scheduled Supabase cron job
+    // (see schedule-cleanup.sql) — the browser no longer needs delete access.
+    // This just keeps the in-memory list consistent with the retention window.
+    const cutoff = Date.now() - PAST_RETENTION_DAYS*24*60*60*1000;
+    games = games.filter(g => new Date(g.datetime).getTime() >= cutoff);
+  }
+  async function loadCollegeName(){
+    try{
+      const { data, error } = await supabaseClient.from('app_settings').select('value').eq('key', 'college_name').maybeSingle();
+      if(error) console.error('loadCollegeName:', error);
+      if(data && data.value) collegeName = data.value;
+    }catch(e){ console.error('loadCollegeName threw:', e); }
+  }
+  async function saveCollegeName(name){
+    try{
+      const { error } = await supabaseClient.from('app_settings').upsert({ key: 'college_name', value: name });
+      if(error) console.error('saveCollegeName:', error);
+    }catch(e){ console.error('saveCollegeName threw:', e); }
+  }
+  async function loadMyName(){
+    try{
+      const v = localStorage.getItem('campus-my-name');
+      if(v) myName = v;
+    }catch(e){}
+  }
+  async function saveMyName(name){
+    try{ localStorage.setItem('campus-my-name', name); }catch(e){}
+  }
+
+  // ---- post rate limiting: max POST_LIMIT posts per POST_WINDOW_MS ----
+  function getRecentPostTimes(){
+    let times = [];
+    try{ times = JSON.parse(localStorage.getItem('campus-post-times') || '[]'); }catch(e){ times = []; }
+    const cutoff = Date.now() - POST_WINDOW_MS;
+    times = times.filter(t => t > cutoff);
+    try{ localStorage.setItem('campus-post-times', JSON.stringify(times)); }catch(e){}
+    return times;
+  }
+  function recordPostTime(){
+    const times = getRecentPostTimes();
+    times.push(Date.now());
+    try{ localStorage.setItem('campus-post-times', JSON.stringify(times)); }catch(e){}
+  }
+  function getCooldownRemainingMs(){
+    const times = getRecentPostTimes();
+    if(times.length < POST_LIMIT) return 0;
+    const oldest = Math.min(...times);
+    const remaining = (oldest + POST_WINDOW_MS) - Date.now();
+    return remaining > 0 ? remaining : 0;
+  }
+  function formatCooldown(ms){
+    const totalSec = Math.ceil(ms / 1000);
+    const m = Math.floor(totalSec / 60);
+    const s = totalSec % 60;
+    return `${m}:${s.toString().padStart(2,'0')}`;
+  }
+  function updatePostButtonState(){
+    const fab = document.getElementById('openModalBtn');
+    const remaining = getCooldownRemainingMs();
+    if(remaining <= 0){
+      fab.disabled = false;
+      fab.style.opacity = '1';
+      fab.style.cursor = 'pointer';
+      fab.textContent = '+ Post a game';
+      if(cooldownInterval){ clearInterval(cooldownInterval); cooldownInterval = null; }
+      return;
+    }
+    fab.disabled = true;
+    fab.style.opacity = '0.55';
+    fab.style.cursor = 'not-allowed';
+    fab.textContent = `Cooldown · ${formatCooldown(remaining)}`;
+    if(!cooldownInterval){
+      cooldownInterval = setInterval(updatePostButtonState, 1000);
+    }
+  }
+  async function loadFeedback(){
+    const { data, error } = await supabaseClient.from('feedback').select('*').order('created_at', { ascending: false });
+    if(error){ console.error(error); feedback = []; return; }
+    feedback = (data || []).map(r => ({ rating: r.rating, comment: r.comment, name: r.name, createdAt: new Date(r.created_at).getTime() }));
+  }
+  async function insertFeedback(entry){
+    const { error } = await supabaseClient.from('feedback').insert({
+      id: entry.id, rating: entry.rating, comment: entry.comment, name: entry.name
+    });
+    if(error){ console.error(error); showToast("Couldn't save — try again"); }
+  }
+  async function loadMyNotifications(){
+    if(!myName){ myNotifications = []; return; }
+    const { data, error } = await supabaseClient.from('notifications').select('*')
+      .eq('recipient', myName).order('created_at', { ascending: false }).limit(50);
+    if(error){ console.error(error); myNotifications = []; return; }
+    myNotifications = (data || []).map(r => ({
+      id: r.id, gameTitle: r.game_title, joinerName: r.joiner_name,
+      createdAt: new Date(r.created_at).getTime(), read: r.read
+    }));
+  }
+  async function saveMyNotifications(){
+    if(!myName) return;
+    await supabaseClient.from('notifications').update({ read: true }).eq('recipient', myName).eq('read', false);
+  }
+  async function notifyHost(hostName, gameTitle, joinerName){
+    if(!hostName || hostName === joinerName) return;
+    const { error } = await supabaseClient.from('notifications').insert({
+      id: uid(), recipient: hostName, game_title: gameTitle, joiner_name: joinerName
+    });
+    if(error) console.error(error);
+  }
+  function updateBellBadge(){
+    const unread = myNotifications.filter(n => !n.read).length;
+    const badge = document.getElementById('bellBadge');
+    if(unread > 0){ badge.style.display = 'inline-block'; badge.textContent = unread > 9 ? '9+' : unread; }
+    else{ badge.style.display = 'none'; }
+  }
+  function timeAgo(ts){
+    const diff = Date.now() - ts;
+    const mins = Math.floor(diff/60000);
+    if(mins < 1) return 'just now';
+    if(mins < 60) return mins + 'm ago';
+    const hrs = Math.floor(mins/60);
+    if(hrs < 24) return hrs + 'h ago';
+    return Math.floor(hrs/24) + 'd ago';
+  }
+  function renderNotifList(){
+    const el = document.getElementById('notifList');
+    if(myNotifications.length === 0){
+      el.innerHTML = `<div class="empty" style="padding:30px 10px;"><div class="big">🔔</div><p>No notifications yet — you'll see them here when someone joins a game you're hosting.</p></div>`;
+      return;
+    }
+    el.innerHTML = myNotifications.map(n => `
+      <div class="notif-item ${n.read ? '' : 'unread'}">
+        <span class="notif-icon">🙋</span>
+        <div>
+          <div class="notif-text"><b>${escapeHtml(n.joinerName)}</b> joined your game "<b>${escapeHtml(n.gameTitle)}</b>"</div>
+          <div class="notif-time">${timeAgo(n.createdAt)}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function fmtWhen(iso){
+    const d = new Date(iso);
+    if(isNaN(d)) return 'Time TBD';
+    const now = new Date();
+    const isToday = d.toDateString() === now.toDateString();
+    const tmrw = new Date(now); tmrw.setDate(now.getDate()+1);
+    const isTomorrow = d.toDateString() === tmrw.toDateString();
+    const time = d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+    if(isToday) return 'Today · ' + time;
+    if(isTomorrow) return 'Tomorrow · ' + time;
+    return d.toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'}) + ' · ' + time;
+  }
+
+  function initials(name){
+    return (name||'?').trim().split(/\s+/).slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('') || '?';
+  }
+
+  function renderTabs(){
+    const all = [{id:'all', label:'All', emoji:'🎯', color:'#152219'}, ...SPORTS];
+    tabsEl.innerHTML = all.map(s => `
+      <div class="tab ${activeFilter===s.id?'active':''}" data-id="${s.id}" style="border-bottom:2px solid ${s.color}">
+        <span class="tab-icon">${s.emoji}</span>${s.label}
+      </div>
+    `).join('');
+    tabsEl.querySelectorAll('.tab').forEach(t=>{
+      t.addEventListener('click', ()=>{ activeFilter = t.dataset.id; renderTabs(); renderFeed(); });
+    });
+  }
+
+  const mineToggleEl = document.getElementById('mineToggle');
+  mineToggleEl.addEventListener('click', ()=>{
+    showMineOnly = !showMineOnly;
+    mineToggleEl.classList.toggle('active', showMineOnly);
+    renderFeed();
+  });
+
+  function renderSportPicker(){
+    const picker = document.getElementById('sportPicker');
+    picker.innerHTML = SPORTS.map(s => `
+      <div class="sport-opt ${selectedSport===s.id?'active':''}" data-id="${s.id}">
+        <span class="emo">${s.emoji}</span>${s.label}
+      </div>
+    `).join('');
+    picker.querySelectorAll('.sport-opt').forEach(el=>{
+      el.addEventListener('click', ()=>{ selectedSport = el.dataset.id; renderSportPicker(); });
+    });
+  }
+
+  function renderStarPicker(){
+    const el = document.getElementById('starPicker');
+    el.innerHTML = [1,2,3,4,5].map(n => `<span class="star ${n<=selectedRating?'filled':''}" data-n="${n}">★</span>`).join('');
+    el.querySelectorAll('.star').forEach(s=>{
+      s.addEventListener('click', ()=>{ selectedRating = parseInt(s.dataset.n,10); renderStarPicker(); });
+    });
+  }
+
+  function staticStars(rating){
+    const full = Math.round(rating);
+    return Array.from({length:5}).map((_,i)=> `<span style="color:${i<full ? 'var(--lime)' : '#DDD'}">★</span>`).join('');
+  }
+
+  function renderRatingSummary(){
+    const el = document.getElementById('ratingSummary');
+    if(feedback.length === 0){
+      el.style.borderBottom = 'none';
+      el.style.paddingBottom = '0';
+      el.style.marginBottom = '12px';
+      el.innerHTML = `<div style="color:var(--muted); font-size:13px;">No reviews yet — be the first to share feedback.</div>`;
+      return;
+    }
+    el.style.borderBottom = '1px solid var(--line)';
+    el.style.paddingBottom = '16px';
+    el.style.marginBottom = '18px';
+    const avg = feedback.reduce((s,f)=>s+f.rating,0) / feedback.length;
+    el.innerHTML = `
+      <div class="avg display">${avg.toFixed(1)}</div>
+      <div>
+        <div class="review-stars">${staticStars(avg)}</div>
+        <div class="meta">${feedback.length} review${feedback.length===1?'':'s'}</div>
+      </div>
+    `;
+  }
+
+  function renderReviewsList(){
+    const listEl = document.getElementById('reviewsList');
+    if(feedback.length === 0){ listEl.innerHTML = ''; return; }
+    const sorted = [...feedback].sort((a,b)=> b.createdAt - a.createdAt);
+    listEl.innerHTML = sorted.map(f => `
+      <div class="review-card">
+        <div class="review-top">
+          <span class="review-name">${escapeHtml(f.name || 'Anonymous')}</span>
+          <span class="review-stars">${staticStars(f.rating)}</span>
+        </div>
+        ${f.comment ? `<div class="review-comment">${escapeHtml(f.comment)}</div>` : ''}
+      </div>
+    `).join('');
+  }
+
+  function renderFeed(){
+    const now = Date.now();
+
+    const siteWideUpcoming = games.filter(g => new Date(g.datetime).getTime() >= now - 1000*60*60*2).length;
+    const heroStatEl = document.getElementById('heroStat');
+    if(heroStatEl){
+      heroStatEl.innerHTML = siteWideUpcoming > 0
+        ? `<span class="n">${siteWideUpcoming}</span> game${siteWideUpcoming===1?'':'s'} on deck`
+        : `<span class="n">0</span> games posted — be the first`;
+    }
+
+    let list = games.filter(g => activeFilter==='all' || g.sport===activeFilter);
+    if(showMineOnly){
+      list = list.filter(g => myName && (g.host === myName || (g.joiners||[]).includes(myName)));
+    }
+    const upcoming = list.filter(g => new Date(g.datetime).getTime() >= now - 1000*60*60*2)
+                         .sort((a,b)=> new Date(a.datetime) - new Date(b.datetime));
+    const past = list.filter(g => new Date(g.datetime).getTime() < now - 1000*60*60*2)
+                      .sort((a,b)=> new Date(b.datetime) - new Date(a.datetime));
+
+    if(upcoming.length === 0 && past.length === 0){
+      feedEl.innerHTML = showMineOnly && !myName
+        ? `<div class="empty"><div class="big">⭐</div><p>Post or join a game first, then your games will show up here.</p></div>`
+        : `<div class="empty"><div class="big">🏟️</div><div class="display" style="font-size:22px;">No games posted yet</div><p>Be the first — tap "Post a game" below and get a run going.</p></div>`;
+      return;
+    }
+
+    let html = '';
+    if(upcoming.length > 0){
+      html += `<div class="section-label">Upcoming · ${upcoming.length}</div>` +
+        upcoming.map(g => cardHTML(g, false)).join('');
+    } else {
+      html += `
+        <div class="empty" style="padding:30px 20px;">
+          <div class="big">🏟️</div>
+          <p>No upcoming games in this category yet. Be the first to post one.</p>
+        </div>`;
+    }
+
+    if(past.length > 0){
+      html += `
+        <div class="past-toggle" id="pastToggle">
+          <span>Past games · ${past.length}</span>
+          <span class="past-toggle-arrow">${pastExpanded ? '▲' : '▼'}</span>
+        </div>`;
+      if(pastExpanded){
+        html += past.map(g => cardHTML(g, true)).join('');
+      }
+    }
+
+    feedEl.innerHTML = html;
+
+    feedEl.querySelectorAll('[data-join]').forEach(btn=>{
+      btn.addEventListener('click', ()=>handleJoin(btn.dataset.join));
+    });
+    feedEl.querySelectorAll('[data-leave]').forEach(btn=>{
+      btn.addEventListener('click', ()=>handleLeave(btn.dataset.leave));
+    });
+    feedEl.querySelectorAll('[data-cal]').forEach(btn=>{
+      btn.addEventListener('click', ()=>downloadICS(btn.dataset.cal));
+    });
+    const toggle = document.getElementById('pastToggle');
+    if(toggle){
+      toggle.addEventListener('click', ()=>{ pastExpanded = !pastExpanded; renderFeed(); });
+    }
+  }
+
+  function toICSDate(d){
+    return d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  }
+  function downloadICS(id){
+    const g = games.find(x => x.id === id);
+    if(!g) return;
+    const start = new Date(g.datetime);
+    const end = new Date(start.getTime() + 60*60*1000);
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Campus Play//EN',
+      'BEGIN:VEVENT',
+      `UID:${g.id}@campusplay`,
+      `DTSTAMP:${toICSDate(new Date())}`,
+      `DTSTART:${toICSDate(start)}`,
+      `DTEND:${toICSDate(end)}`,
+      `SUMMARY:${g.title.replace(/\n/g,' ')}`,
+      `LOCATION:${g.location.replace(/\n/g,' ')}`,
+      `DESCRIPTION:${(g.notes||'').replace(/\n/g,' ')}`,
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+    const blob = new Blob([ics], { type: 'text/calendar' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${g.title.replace(/[^a-z0-9]/gi,'-')}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function cardHTML(g, isPast){
+    const sport = sportById[g.sport] || sportById.other;
+    const spots = g.maxSpots || 0;
+    const joined = g.joiners || [];
+    const full = joined.length >= spots;
+    const iAmIn = myName && joined.includes(myName);
+    const chips = joined.slice(0,5).map(n => `<div class="joiner-chip" title="${escapeHtml(n)}">${escapeHtml(initials(n))}</div>`).join('');
+    const extra = joined.length > 5 ? `<div class="joiner-chip">+${joined.length-5}</div>` : '';
+
+    let actionBtn;
+    if(isPast){
+      actionBtn = '';
+    } else if(iAmIn){
+      actionBtn = `<button class="btn btn-leave" data-leave="${g.id}">Leave</button>`;
+    } else if(full){
+      actionBtn = `<button class="btn btn-full" disabled>Full</button>`;
+    } else {
+      actionBtn = `<button class="btn btn-join" data-join="${g.id}">Join</button>`;
+    }
+    const calBtn = !isPast ? `<button class="btn-cal" data-cal="${g.id}" title="Add to calendar">📅</button>` : '';
+
+    return `
+      <div class="card ${isPast ? 'card-past' : ''}" style="--card-accent:${sport.color};">
+        <div class="card-top">
+          <span class="card-sport" style="background:${sport.color}22; color:${sport.color};">
+            ${sport.emoji} ${sport.label}
+          </span>
+          <div class="scoreboard ${full?'full':''}">
+            <span class="count mono">${joined.length}/${spots}</span>
+            <span class="label">${isPast ? 'played' : 'in'}</span>
+          </div>
+        </div>
+        <div class="card-title">${escapeHtml(g.title)}</div>
+        <div class="card-meta">
+          <span>🕒 ${fmtWhen(g.datetime)}</span>
+          <span>📍 ${escapeHtml(g.location)}</span>
+        </div>
+        ${g.notes ? `<div class="card-notes">${escapeHtml(g.notes)}</div>` : ''}
+        <div class="card-footer">
+          <div>
+            <div class="joiners">${chips}${extra}</div>
+            <div class="host-tag" style="margin-top:6px;">Hosted by <b>${escapeHtml(g.host)}</b></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            ${calBtn}
+            ${actionBtn}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str ?? '';
+    return d.innerHTML;
+  }
+
+  function ensureName(cb){
+    if(myName){ cb(myName); return; }
+    const name = prompt("What's your name? (so people know who's joining)");
+    if(name && name.trim()){
+      myName = name.trim();
+      saveMyName(myName);
+      loadMyNotifications().then(updateBellBadge);
+      cb(myName);
+    }
+  }
+
+  async function handleJoin(id){
+    ensureName(async (name)=>{
+      const g = games.find(x=>x.id===id);
+      if(!g) return;
+      g.joiners = g.joiners || [];
+      if(g.joiners.includes(name)){ renderFeed(); return; }
+      if(g.joiners.length >= g.maxSpots){ showToast('That game just filled up'); renderFeed(); return; }
+      try{
+        const updatedJoiners = await joinGameRpc(g.id, name);
+        g.joiners = updatedJoiners;
+        await notifyHost(g.host, g.title, name);
+        renderFeed();
+        showToast("You're in! 🎉");
+      }catch(e){
+        console.error(e);
+        showToast('That game just filled up');
+        await loadGames();
+        renderFeed();
+      }
+    });
+  }
+
+  async function handleLeave(id){
+    const g = games.find(x=>x.id===id);
+    if(!g || !myName) return;
+    try{
+      const updatedJoiners = await leaveGameRpc(g.id, myName);
+      g.joiners = updatedJoiners;
+      renderFeed();
+      showToast('Left the game');
+    }catch(e){
+      console.error(e);
+      showToast("Couldn't leave — try again");
+    }
+  }
+
+  // modal wiring
+  const overlayEl = document.getElementById('overlay');
+  document.getElementById('openModalBtn').addEventListener('click', ()=>{
+    const remaining = getCooldownRemainingMs();
+    if(remaining > 0){
+      showToast(`You've hit the posting limit — try again in ${formatCooldown(remaining)}`);
+      return;
+    }
+    renderSportPicker();
+    document.getElementById('fHost').value = myName || '';
+    const d = new Date(Date.now() + 1000*60*60*2);
+    d.setMinutes(Math.round(d.getMinutes()/15)*15);
+    document.getElementById('fDatetime').value = d.toISOString().slice(0,16);
+    overlayEl.classList.add('open');
+  });
+  document.getElementById('closeModal').addEventListener('click', ()=>overlayEl.classList.remove('open'));
+  document.getElementById('cancelBtn').addEventListener('click', ()=>overlayEl.classList.remove('open'));
+  overlayEl.addEventListener('click', (e)=>{ if(e.target===overlayEl) overlayEl.classList.remove('open'); });
+
+  // feedback modal wiring
+  const feedbackOverlayEl = document.getElementById('feedbackOverlay');
+  document.getElementById('openFeedbackBtn').addEventListener('click', ()=>{
+    selectedRating = 5;
+    renderStarPicker();
+    document.getElementById('fbComment').value = '';
+    document.getElementById('fbName').value = myName || '';
+    renderRatingSummary();
+    renderReviewsList();
+    feedbackOverlayEl.classList.add('open');
+  });
+  document.getElementById('closeFeedback').addEventListener('click', ()=>feedbackOverlayEl.classList.remove('open'));
+  document.getElementById('fbCancelBtn').addEventListener('click', ()=>feedbackOverlayEl.classList.remove('open'));
+  feedbackOverlayEl.addEventListener('click', (e)=>{ if(e.target===feedbackOverlayEl) feedbackOverlayEl.classList.remove('open'); });
+
+  document.getElementById('fbSubmitBtn').addEventListener('click', async ()=>{
+    const comment = document.getElementById('fbComment').value.trim();
+    const name = document.getElementById('fbName').value.trim();
+    const entry = { id: uid(), rating: selectedRating, comment, name, createdAt: Date.now() };
+    feedback.unshift(entry);
+    await insertFeedback(entry);
+    if(name){ myName = name; await saveMyName(name); }
+    document.getElementById('fbComment').value = '';
+    renderRatingSummary();
+    renderReviewsList();
+    showToast('Thanks for the feedback! 🤘');
+  });
+
+  // notifications wiring
+  const notifOverlayEl = document.getElementById('notifOverlay');
+  document.getElementById('bellBtn').addEventListener('click', async ()=>{
+    if(!myName){
+      showToast("Post or join a game first so we know who you are");
+      return;
+    }
+    renderNotifList();
+    notifOverlayEl.classList.add('open');
+    if(myNotifications.some(n => !n.read)){
+      myNotifications.forEach(n => n.read = true);
+      await saveMyNotifications();
+      updateBellBadge();
+    }
+  });
+  document.getElementById('closeNotif').addEventListener('click', ()=>notifOverlayEl.classList.remove('open'));
+  notifOverlayEl.addEventListener('click', (e)=>{ if(e.target===notifOverlayEl) notifOverlayEl.classList.remove('open'); });
+
+  document.getElementById('submitBtn').addEventListener('click', async ()=>{
+    const title = document.getElementById('fTitle').value.trim();
+    const location = document.getElementById('fLocation').value.trim();
+    const datetime = document.getElementById('fDatetime').value;
+    const maxSpots = parseInt(document.getElementById('fMax').value, 10) || 8;
+    const notes = document.getElementById('fNotes').value.trim();
+    const host = document.getElementById('fHost').value.trim();
+
+    if(!title || !location || !datetime || !host){
+      showToast('Fill in title, location, time & your name');
+      return;
+    }
+
+    const remaining = getCooldownRemainingMs();
+    if(remaining > 0){
+      showToast(`You've hit the posting limit — try again in ${formatCooldown(remaining)}`);
+      overlayEl.classList.remove('open');
+      updatePostButtonState();
+      return;
+    }
+
+    const g = {
+      id: uid(),
+      sport: selectedSport,
+      title, location, notes, host,
+      datetime: new Date(datetime).toISOString(),
+      maxSpots,
+      joiners: [host],
+      createdAt: Date.now()
+    };
+    myName = host;
+    await saveMyName(host);
+    await loadMyNotifications();
+    updateBellBadge();
+    games.push(g);
+    await insertGame(g);
+    recordPostTime();
+    updatePostButtonState();
+    overlayEl.classList.remove('open');
+    ['fTitle','fLocation','fNotes'].forEach(id=>document.getElementById(id).value='');
+    renderFeed();
+    showToast('Game posted 🏟️');
+  });
+
+  // editable college name
+  collegeNameEl.addEventListener('click', ()=>{
+    const wrap = document.getElementById('collegeNameWrap');
+    wrap.innerHTML = `<input class="college-name-input" id="collegeInput" value="${escapeHtml(collegeName)}" maxlength="40"/>`;
+    const input = document.getElementById('collegeInput');
+    input.focus(); input.select();
+    const commit = async ()=>{
+      const val = input.value.trim() || 'Texas Tech';
+      collegeName = val;
+      await saveCollegeName(val);
+      wrap.innerHTML = `<span id="collegeName" class="college-name display">${escapeHtml(collegeName)}</span>`;
+      document.getElementById('collegeName').addEventListener('click', arguments.callee.caller);
+      rewireCollegeName();
+    };
+    input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') input.blur(); });
+    input.addEventListener('blur', commit);
+  });
+
+  function rewireCollegeName(){
+    const el = document.getElementById('collegeName');
+    el.replaceWith(el.cloneNode(true));
+    document.getElementById('collegeName').addEventListener('click', ()=>{
+      const wrap = document.getElementById('collegeNameWrap');
+      wrap.innerHTML = `<input class="college-name-input" id="collegeInput" value="${escapeHtml(collegeName)}" maxlength="40"/>`;
+      const input = document.getElementById('collegeInput');
+      input.focus(); input.select();
+      const commit = async ()=>{
+        const val = input.value.trim() || 'Texas Tech';
+        collegeName = val;
+        await saveCollegeName(val);
+        wrap.innerHTML = `<span id="collegeName" class="college-name display">${escapeHtml(collegeName)}</span>`;
+        rewireCollegeName();
+      };
+      input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') input.blur(); });
+      input.addEventListener('blur', commit);
+    });
+  }
+
+  function applyTheme(theme){
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️' : '🌙';
+    try{ localStorage.setItem('cp-theme', theme); }catch(e){}
+  }
+  (function initTheme(){
+    let saved = 'light';
+    try{ saved = localStorage.getItem('cp-theme') || 'light'; }catch(e){}
+    document.documentElement.setAttribute('data-theme', saved);
+  })();
+
+  async function init(){
+    try{ await loadSports(); }catch(e){ console.error('loadSports:', e); }
+    selectedSport = SPORTS[0] ? SPORTS[0].id : null;
+    renderTabs();
+    document.getElementById('themeToggle').textContent =
+      document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+    document.getElementById('themeToggle').addEventListener('click', ()=>{
+      const current = document.documentElement.getAttribute('data-theme');
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
+    const results = await Promise.allSettled([loadGames(), loadCollegeName(), loadMyName(), loadFeedback()]);
+    const failed = results.filter(r => r.status === 'rejected');
+    if(failed.length > 0){
+      failed.forEach(f => console.error('Init step failed:', f.reason));
+      showToast("Couldn't connect to the database — check your Supabase URL/key");
+    }
+    try{ await purgeOldGames(); }catch(e){ console.error('purgeOldGames:', e); }
+    try{ await loadMyNotifications(); }catch(e){ console.error('loadMyNotifications:', e); }
+    collegeNameEl.textContent = collegeName;
+    rewireCollegeName();
+    updatePostButtonState();
+    renderFeed();
+    updateBellBadge();
+
+    try{
+      if(!localStorage.getItem('cp-seen-intro')){
+        document.getElementById('introOverlay').classList.add('open');
+      }
+    }catch(e){}
+    document.getElementById('introGotIt').addEventListener('click', ()=>{
+      document.getElementById('introOverlay').classList.remove('open');
+      try{ localStorage.setItem('cp-seen-intro', '1'); }catch(e){}
+    });
+
+    // light polling so people see new posts and notifications without refreshing
+    setInterval(async ()=>{
+      await loadGames();
+      await purgeOldGames();
+      renderFeed();
+
+      const prevUnread = myNotifications.filter(n => !n.read).length;
+      await loadMyNotifications();
+      const newUnread = myNotifications.filter(n => !n.read).length;
+      updateBellBadge();
+      if(newUnread > prevUnread){
+        const latest = myNotifications.find(n => !n.read);
+        if(latest) showToast(`🔔 ${latest.joinerName} joined "${latest.gameTitle}"`);
+      }
+    }, 6000);
+  }
+  init();
+})();
+</script>
+</body>
+</html>
