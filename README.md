@@ -2,7 +2,7 @@
 
 A live web app that helps students find pickup games, workouts, and watch parties happening on campus. Post what you're doing, and let others join.
 
-**[Live site →](campusplay.online)**
+**[Live site →](https://campusplay.online/)**
 
 ## Why I built this
 
