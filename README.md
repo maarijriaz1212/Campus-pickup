@@ -2,7 +2,7 @@
 
 A live web app that helps students find pickup games, workouts, and watch parties happening on campus. Post what you're doing, and let others join.
 
-**[Live site →](https://stirring-pastelito-c9652e.netlify.app/)**
+**[Live site →](campusplay.online)**
 
 ## Why I built this
 
@@ -36,20 +36,6 @@ College is a great place to meet people through shared interests, but there's no
 - Old game cleanup runs server-side on a daily cron schedule rather than trusting the client
 - The sport/category list lives in its own database table rather than in the code, so it can be edited live without a redeploy
 - All data access is governed by Postgres row-level security policies
-
-## Setup (if you want to run your own copy)
-
-1. Create a free [Supabase](https://supabase.com) project
-2. In the SQL Editor, run these files in order:
-   1. `supabase-schema.sql` — core tables
-   2. `grant-permissions.sql` — base table permissions
-   3. `schedule-cleanup.sql` — automatic old-game cleanup
-   4. `harden-data.sql` — server-side data length limits
-   5. `secure-join-leave.sql` — secure join/leave functions
-   6. `add-sports-table.sql` — the editable sport/category list
-3. Copy your Project URL and anon key from Settings → API
-4. Paste them into the `SUPABASE_URL` / `SUPABASE_ANON_KEY` constants near the top of `campus-pickup-web.html`
-5. Deploy the HTML file to Netlify, Vercel, or any static host
 
 ## Adding a new sport/category
 
